@@ -12,7 +12,7 @@ namespace WebApplicationSignalR_NEW.App_Code
     {
         public void Configuration(IAppBuilder app)
         {
-           // System.Data.SqlClient.SqlDependency.Start(ConfigurationManager.ConnectionStrings["UserConnection"].ConnectionString);
+            System.Data.SqlClient.SqlDependency.Start(ConfigurationManager.ConnectionStrings["UserConnection"].ConnectionString);
             app.MapSignalR();
         }
     }
