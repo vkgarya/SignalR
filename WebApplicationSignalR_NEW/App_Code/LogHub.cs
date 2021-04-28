@@ -23,4 +23,17 @@ namespace WebApplicationSignalR_NEW.App_Code
             hub.Clients.All.logMessage(string.Format("{0} - Still running", DateTime.UtcNow));
         }
     }
+
+    public class CustomerHub : Hub
+    {
+        static CustomerHub()
+        {
+        }
+        
+        public static void Show()
+        {
+            IHubContext context = GlobalHost.ConnectionManager.GetHubContext<CustomerHub>();
+            context.Clients.All.DisplayCustomer();
+        }
+    }
 }
