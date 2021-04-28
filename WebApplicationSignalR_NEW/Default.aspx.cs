@@ -5,9 +5,11 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
+using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using WebApplicationSignalR_NEW.Models;
+using WebApplicationSignalR_NEW.SignalRHubs;
 
 namespace WebApplicationSignalR_NEW
 {
@@ -18,11 +20,19 @@ namespace WebApplicationSignalR_NEW
             var myLog = new List<string>();
             myLog.Add(string.Format("{0} - Logging Started", DateTime.UtcNow));
 
-            logListView.DataSource = myLog;
-            logListView.DataBind();
+            LogListView.DataSource = myLog;
+            LogListView.DataBind();
 
-            GetUserData();
+            UserGridView.DataSource = GetUserData();
+            UserGridView.DataBind();
 
+        }
+
+        [WebMethod]
+        public static List<User> GetUserDataWebMethod()
+        {
+            _Default defaultObj = new _Default();
+            return defaultObj.GetUserData();
         }
 
         private List<User> GetUserData()
@@ -38,8 +48,8 @@ namespace WebApplicationSignalR_NEW
                     // a notification object associated with it.
                     command.Notification = null;
 
-                    SqlDependency dependency = new SqlDependency(command);
-                    dependency.OnChange += new OnChangeEventHandler(dependency_OnChange);
+                    //SqlDependency dependency = new SqlDependency(command);
+                    //dependency.OnChange += new OnChangeEventHandler(dependency_OnChange);
 
                     if (connection.State == ConnectionState.Closed)
                         connection.Open();
@@ -64,7 +74,7 @@ namespace WebApplicationSignalR_NEW
 
         private void dependency_OnChange(object sender, SqlNotificationEventArgs e)
         {
-            CustomerHub.Show();
+            UserHub.Show();
         }
     }
 }

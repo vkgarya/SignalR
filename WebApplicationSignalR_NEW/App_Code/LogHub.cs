@@ -12,7 +12,7 @@ namespace WebApplicationSignalR_NEW.App_Code
 
         static LogHub()
         {
-            _Timer.Interval = 5000;
+            _Timer.Interval = 10000;
             _Timer.Elapsed += TimerElapsed;
             _Timer.Start();
         }
@@ -21,19 +21,6 @@ namespace WebApplicationSignalR_NEW.App_Code
         {
             var hub = GlobalHost.ConnectionManager.GetHubContext("LogHub");
             hub.Clients.All.logMessage(string.Format("{0} - Still running", DateTime.UtcNow));
-        }
-    }
-
-    public class CustomerHub : Hub
-    {
-        static CustomerHub()
-        {
-        }
-        
-        public static void Show()
-        {
-            IHubContext context = GlobalHost.ConnectionManager.GetHubContext<CustomerHub>();
-            context.Clients.All.DisplayCustomer();
         }
     }
 }
