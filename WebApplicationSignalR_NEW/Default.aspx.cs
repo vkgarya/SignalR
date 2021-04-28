@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Security.Permissions;
 using System.Web;
 using System.Web.Services;
 using System.Web.UI;
@@ -15,11 +16,24 @@ namespace WebApplicationSignalR_NEW
 {
     public partial class _Default : Page
     {
+        //private DataSet myDataSet = null;
+        //private SqlConnection connection;
+        //private SqlCommand command = null;
         protected void Page_Load(object sender, EventArgs e)
         {
+            //EnoughPermission();
+            //string ssql = "SELECT [Id] ,[Name] ,[City] FROM [SignalRDb].[dbo].[UserTbl]";
+
+            //SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["UserConnection"].ConnectionString.ToString());
+            //if (command == null)
+            //    command = new SqlCommand(ssql, connection);
+
+            //if (myDataSet == null)
+            //    myDataSet = new DataSet();
+            //GetAdvtData();
+
             var myLog = new List<string>();
             myLog.Add(string.Format("{0} - Logging Started", DateTime.UtcNow));
-
             LogListView.DataSource = myLog;
             LogListView.DataBind();
 
@@ -28,6 +42,7 @@ namespace WebApplicationSignalR_NEW
 
         }
 
+        // Vijay::Step - 8
         [WebMethod]
         public static List<User> GetUserDataWebMethod()
         {
@@ -35,6 +50,7 @@ namespace WebApplicationSignalR_NEW
             return defaultObj.GetUserData();
         }
 
+        // Vijay::Step - 9
         private List<User> GetUserData()
         {
             List<User> users = new List<User>();
@@ -72,9 +88,61 @@ namespace WebApplicationSignalR_NEW
             return users;
         }
 
+        //Vijay::Step - 9
         private void dependency_OnChange(object sender, SqlNotificationEventArgs e)
         {
             UserHub.Show();
         }
+
+        //private bool EnoughPermission()
+        //{
+        //    SqlClientPermission perm = new SqlClientPermission(PermissionState.Unrestricted);
+        //    try
+        //    {
+        //        perm.Demand();
+        //        return true;
+        //    }
+        //    catch (System.Exception)
+        //    {
+        //        return false;
+        //    }
+        //}
+
+        //SqlDependency dependency;
+        //private void GetAdvtData()
+        //{
+        //    myDataSet.Clear();
+        //    command.Notification = null;
+        //    dependency = new SqlDependency(command);
+        //    //Label1.Text = System.DateTime.Now.ToString();
+        //    dependency.OnChange += new OnChangeEventHandler(dependency_OnChange);
+        //    using (SqlDataAdapter adapter = new SqlDataAdapter(command))
+        //    {
+        //        adapter.Fill(myDataSet, "dbo.UserTbl");
+        //        UserGridView.DataSource = myDataSet;
+        //        UserGridView.DataMember = "dbo.UserTbl";
+        //        UserGridView.DataBind();
+        //    }
+        //}
+
+        //private void dependency_OnChange(object sender, SqlNotificationEventArgs e)
+        //{
+        //    try
+        //    {
+        //        RefreshData();
+        //       // UpdatePanel1.Update();
+        //    }
+        //    catch (Exception)
+        //    {
+        //    }
+        //    SqlDependency dependency = (SqlDependency)sender;
+        //    dependency.OnChange -= dependency_OnChange;
+        //}
+
+        //private void RefreshData()
+        //{
+        //    //Label1.Text = "Database had some changes and are applied in the Grid";
+        //    GetAdvtData();
+        //}
     }
 }

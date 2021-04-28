@@ -1,14 +1,12 @@
 ﻿<%@ Page Title="Home Page" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="WebApplicationSignalR_NEW._Default" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
-
+    <%--Vijay::Step - 7--%>
     <h3>Users GridView</h3>
     <asp:GridView ID="UserGridView" runat="server"></asp:GridView>
-
+    <hr />
+    
     <h3>Users HTML Table</h3>
-
-    <%--@Html.Hidden("Get", Url.Action("Get", "Customer"))--%>
-
     <table class="table">
         <thead>
             <tr>
@@ -21,7 +19,8 @@
         <tbody id="tblInfo">
         </tbody>
     </table>
-
+    <hr />
+    
     <h3>Log Items</h3>
     <asp:ListView ID="LogListView" runat="server" ItemPlaceholderID="itemPlaceHolder" ClientIDMode="Static" EnableViewState="false">
         <LayoutTemplate>
@@ -42,23 +41,21 @@
 
             // Logger
             var logger = $.connection.logHub;
-
             logger.client.logMessage = function (msg) {
-
                 $("#logUl").append("<li>" + msg + "</li>");
-
             };
-
             $.connection.hub.start();
+
             //});
 
             //$(function () {
 
+            // Vijay::Step - 7
             // User
             // Proxy created on the fly
-            var userHub = $.connection.userHub;
+            var userHubConnection = $.connection.userHub;
             // Declare a function on the job hub so the server can invoke it
-            userHub.client.displayUsers = function () {
+            userHubConnection.client.displayUsers = function () {
                 getuserData();
             };
             // Start the connection
