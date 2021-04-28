@@ -91,6 +91,19 @@ namespace WebApplicationSignalR_NEW
         //Vijay::Step - 9
         private void dependency_OnChange(object sender, SqlNotificationEventArgs e)
         {
+            HttpContext.Current.Response.Write($"OnChange Event fired. SqlNotificationEventArgs: Info={e.Info}, Source={e.Source}, Type={e.Type}.");
+            if ((e.Info != SqlNotificationInfo.Invalid) && (e.Type != SqlNotificationType.Subscribe))
+            {
+                //resubscribe
+                //var dt = getDataWithSqlDependency();
+                //HttpContext.Current.Response.Write($"Data changed. {dt.Rows.Count} rows returned.");
+                HttpContext.Current.Response.Write($"Data changed.");
+            }
+            else
+            {
+                HttpContext.Current.Response.Write("SqlDependency not restarted");
+            }
+
             UserHub.Show();
         }
 

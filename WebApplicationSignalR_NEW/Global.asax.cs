@@ -14,8 +14,8 @@ namespace WebApplicationSignalR_NEW
     public class Global : HttpApplication
     {
         void Application_Start(object sender, EventArgs e)
-        {
             // Code that runs on application startup
+        {
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             // Vijay::Step - 2
@@ -29,7 +29,7 @@ namespace WebApplicationSignalR_NEW
         // Vijay::Step - 3
         protected void Application_End()
         {
-            SqlDependency.Stop(ConfigurationManager.ConnectionStrings["CustomerConnection"].ConnectionString);
+            //SqlDependency.Stop(ConfigurationManager.ConnectionStrings["CustomerConnection"].ConnectionString);
         }
     }
 }
