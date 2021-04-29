@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace ConsoleAppSignalR
 {
+    // https://stackoverflow.com/questions/18143599/can-signalr-be-used-with-asp-net-webforms
     // https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/sql/detecting-changes-with-sqldependency
     // https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/sql/enabling-query-notifications
     class Program
