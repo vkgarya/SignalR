@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28307.852
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplicationSignalR_NEW", "WebApplicationSignalR_NEW\WebApplicationSignalR_NEW.csproj", "{F0F93EC2-2540-48D0-90B5-5F463B62C6A2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleAppSignalR", "ConsoleAppSignalR\ConsoleAppSignalR.csproj", "{B33790E6-D821-4E99-AE5D-831C68C4CCBA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{F0F93EC2-2540-48D0-90B5-5F463B62C6A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F0F93EC2-2540-48D0-90B5-5F463B62C6A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F0F93EC2-2540-48D0-90B5-5F463B62C6A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B33790E6-D821-4E99-AE5D-831C68C4CCBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B33790E6-D821-4E99-AE5D-831C68C4CCBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B33790E6-D821-4E99-AE5D-831C68C4CCBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B33790E6-D821-4E99-AE5D-831C68C4CCBA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

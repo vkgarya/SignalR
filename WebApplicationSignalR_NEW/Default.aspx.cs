@@ -65,7 +65,7 @@ namespace WebApplicationSignalR_NEW
                     command.Notification = null;
 
                     SqlDependency dependency = new SqlDependency(command);
-                    dependency.OnChange += new OnChangeEventHandler(dependency_OnChange);
+                    dependency.OnChange += new OnChangeEventHandler(OnSqlDependencyChange);
 
                     if (connection.State == ConnectionState.Closed)
                         connection.Open();
@@ -89,7 +89,7 @@ namespace WebApplicationSignalR_NEW
         }
 
         //Vijay::Step - 9
-        private void dependency_OnChange(object sender, SqlNotificationEventArgs e)
+        private void OnSqlDependencyChange(object sender, SqlNotificationEventArgs e)
         {
             HttpContext.Current.Response.Write($"OnChange Event fired. SqlNotificationEventArgs: Info={e.Info}, Source={e.Source}, Type={e.Type}.");
             if ((e.Info != SqlNotificationInfo.Invalid) && (e.Type != SqlNotificationType.Subscribe))
@@ -128,7 +128,7 @@ namespace WebApplicationSignalR_NEW
         //    command.Notification = null;
         //    dependency = new SqlDependency(command);
         //    //Label1.Text = System.DateTime.Now.ToString();
-        //    dependency.OnChange += new OnChangeEventHandler(dependency_OnChange);
+        //    dependency.OnChange += new OnChangeEventHandler(OnSqlDependencyChange);
         //    using (SqlDataAdapter adapter = new SqlDataAdapter(command))
         //    {
         //        adapter.Fill(myDataSet, "dbo.UserTbl");
@@ -138,7 +138,7 @@ namespace WebApplicationSignalR_NEW
         //    }
         //}
 
-        //private void dependency_OnChange(object sender, SqlNotificationEventArgs e)
+        //private void OnSqlDependencyChange(object sender, SqlNotificationEventArgs e)
         //{
         //    try
         //    {
