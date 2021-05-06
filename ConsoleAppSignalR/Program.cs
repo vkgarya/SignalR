@@ -5,6 +5,9 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TableDependency.SqlClient;
+using TableDependency.SqlClient.Base;
+using TableDependency.SqlClient.Base.EventArgs;
 
 namespace ConsoleAppSignalR
 {
@@ -63,13 +66,41 @@ namespace ConsoleAppSignalR
                 //resubscribe
                 var dt = GetDataWithSqlDependency();
                 Console.WriteLine($"Data changed. {dt.Rows.Count} rows returned.");
+
+                // get change data
+                var mapper = new ModelToTableMapper<User>();
+                mapper.AddMapping(c => c.Id, "Id");
+                mapper.AddMapping(c => c.Name, "Name");
+                mapper.AddMapping(c => c.City, "City");
+                using (var dep = new SqlTableDependency<User>(connectionString, "User_Tbl", mapper: mapper))
+                {
+                    dep.OnChanged += Changed;
+                    dep.Start();
+                    //Console.WriteLine("Press a key to exit");
+                    //Console.ReadKey();
+                    dep.Stop();
+                }
             }
             else
             {
                 Console.WriteLine("SqlDependency not restarted");
             }
-
-
         }
+
+        static void Changed(object sender, RecordChangedEventArgs<User> e)
+        {
+            var changedEntity = e.Entity;
+            Console.WriteLine("e.ChangeType" + e.ChangeType);
+            Console.WriteLine("changedEntity.Id", changedEntity.Id);
+            Console.WriteLine("changedEntity.Name", changedEntity.Name);
+            Console.WriteLine("changedEntity.City", changedEntity.City);
+        }
+    }
+
+    public class User
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string City { get; set; }
     }
 }

@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B33790E6-D821-4E99-AE5D-831C68C4CCBA}</ProjectGuid>
+    <ProjectGuid>{7979E956-7CF4-4089-A78C-024A3FFD26C7}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>ConsoleAppSignalR</RootNamespace>
-    <AssemblyName>ConsoleAppSignalR</AssemblyName>
+    <RootNamespace>ConsoleApp_New</RootNamespace>
+    <AssemblyName>ConsoleApp_New</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
