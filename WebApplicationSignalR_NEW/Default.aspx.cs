@@ -9,6 +9,9 @@ using System.Web;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using TableDependency.SqlClient;
+using TableDependency.SqlClient.Base;
+using TableDependency.SqlClient.Base.EventArgs;
 using WebApplicationSignalR_NEW.Models;
 using WebApplicationSignalR_NEW.SignalRHubs;
 
@@ -16,22 +19,9 @@ namespace WebApplicationSignalR_NEW
 {
     public partial class _Default : Page
     {
-        //private DataSet myDataSet = null;
-        //private SqlConnection connection;
-        //private SqlCommand command = null;
+        string connectionString = ConfigurationManager.ConnectionStrings["UserConnection"].ConnectionString;
         protected void Page_Load(object sender, EventArgs e)
         {
-            //EnoughPermission();
-            //string ssql = "SELECT [Id] ,[Name] ,[City] FROM [SignalRDb].[dbo].[UserTbl]";
-
-            //SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["UserConnection"].ConnectionString.ToString());
-            //if (command == null)
-            //    command = new SqlCommand(ssql, connection);
-
-            //if (myDataSet == null)
-            //    myDataSet = new DataSet();
-            //GetAdvtData();
-
             var myLog = new List<string>();
             myLog.Add(string.Format("{0} - Logging Started", DateTime.UtcNow));
             LogListView.DataSource = myLog;
@@ -40,6 +30,13 @@ namespace WebApplicationSignalR_NEW
             UserGridView.DataSource = GetUserData();
             UserGridView.DataBind();
 
+            //User u = new User()
+            //{
+            //    Id = 1,
+            //    Name = "TestName1",
+            //    City = "TestCity1"
+            //};
+            //InsertUser(u);
         }
 
         // Vijay::Step - 8
@@ -58,7 +55,7 @@ namespace WebApplicationSignalR_NEW
             using (var connection = new SqlConnection(ConfigurationManager.ConnectionStrings["UserConnection"].ConnectionString))
             {
                 connection.Open();
-                using (SqlCommand command = new SqlCommand(@"SELECT [Id] ,[Name] ,[City] FROM [SignalRDb].[dbo].[UserTbl]", connection))
+                using (SqlCommand command = new SqlCommand(@"SELECT [Id] ,[Name] ,[City] FROM [SignalRDb].[dbo].[User_Tbl]", connection))
                 {
                     // Make sure the command object does not already have
                     // a notification object associated with it.
@@ -91,71 +88,62 @@ namespace WebApplicationSignalR_NEW
         //Vijay::Step - 9
         private void OnSqlDependencyChange(object sender, SqlNotificationEventArgs e)
         {
-            HttpContext.Current.Response.Write($"OnChange Event fired. SqlNotificationEventArgs: Info={e.Info}, Source={e.Source}, Type={e.Type}.");
+            // HttpContext.Current.Response.Write($"OnChange Event fired. SqlNotificationEventArgs: Info={e.Info}, Source={e.Source}, Type={e.Type}.");
             if ((e.Info != SqlNotificationInfo.Invalid) && (e.Type != SqlNotificationType.Subscribe))
             {
                 //resubscribe
-                //var dt = getDataWithSqlDependency();
-                //HttpContext.Current.Response.Write($"Data changed. {dt.Rows.Count} rows returned.");
                 HttpContext.Current.Response.Write($"Data changed.");
+
+                // get change data
+                var mapper = new ModelToTableMapper<User>();
+                mapper.AddMapping(c => c.Id, "Id");
+                mapper.AddMapping(c => c.Name, "Name");
+                mapper.AddMapping(c => c.City, "City");
+                using (var dep = new SqlTableDependency<User>(connectionString, "User_Tbl", mapper: mapper))
+                {
+                    dep.OnChanged += Changed;
+                    dep.Start();
+                    dep.Stop();
+                }
             }
             else
             {
-                HttpContext.Current.Response.Write("SqlDependency not restarted");
+                // HttpContext.Current.Response.Write("SqlDependency not restarted");
             }
 
             UserHub.Show();
         }
+        
+        public void Changed(object sender, RecordChangedEventArgs<User> e)
+        {
+            var changedEntity = e.Entity;
+            HttpContext.Current.Response.Write("e.ChangeType " + e.ChangeType);
+            HttpContext.Current.Response.Write("changedEntity.Id " + changedEntity.Id);
+            HttpContext.Current.Response.Write("changedEntity.Name " + changedEntity.Name);
+            HttpContext.Current.Response.Write("changedEntity.City " + changedEntity.City);
 
-        //private bool EnoughPermission()
-        //{
-        //    SqlClientPermission perm = new SqlClientPermission(PermissionState.Unrestricted);
-        //    try
-        //    {
-        //        perm.Demand();
-        //        return true;
-        //    }
-        //    catch (System.Exception)
-        //    {
-        //        return false;
-        //    }
-        //}
+            InsertUser(changedEntity);
 
-        //SqlDependency dependency;
-        //private void GetAdvtData()
-        //{
-        //    myDataSet.Clear();
-        //    command.Notification = null;
-        //    dependency = new SqlDependency(command);
-        //    //Label1.Text = System.DateTime.Now.ToString();
-        //    dependency.OnChange += new OnChangeEventHandler(OnSqlDependencyChange);
-        //    using (SqlDataAdapter adapter = new SqlDataAdapter(command))
-        //    {
-        //        adapter.Fill(myDataSet, "dbo.UserTbl");
-        //        UserGridView.DataSource = myDataSet;
-        //        UserGridView.DataMember = "dbo.UserTbl";
-        //        UserGridView.DataBind();
-        //    }
-        //}
+        }
 
-        //private void OnSqlDependencyChange(object sender, SqlNotificationEventArgs e)
-        //{
-        //    try
-        //    {
-        //        RefreshData();
-        //       // UpdatePanel1.Update();
-        //    }
-        //    catch (Exception)
-        //    {
-        //    }
-        //    SqlDependency dependency = (SqlDependency)sender;
-        //    dependency.OnChange -= dependency_OnChange;
-        //}
+        private void InsertUser(User changedEntity)
+        {
+            string query = "INSERT INTO dbo.User_ChangeData_Tbl (Id, Name, City) " +
+                   "VALUES (@id, @name, @city) ";
+            using (SqlConnection cn = new SqlConnection(connectionString))
+            using (SqlCommand cmd = new SqlCommand(query, cn))
+            {
+                // define parameters and their values
+                cmd.Parameters.Add("@id", SqlDbType.VarChar, 50).Value = changedEntity.Id;
+                cmd.Parameters.Add("@name", SqlDbType.VarChar, 50).Value = changedEntity.Name;
+                cmd.Parameters.Add("@city", SqlDbType.VarChar, 50).Value = changedEntity.City;
 
-        //private void RefreshData()
-        //{
-        //    //Label1.Text = "Database had some changes and are applied in the Grid";
-        //    GetAdvtData();
-        //}
+                // open connection, execute INSERT, close connection
+                cn.Open();
+                cmd.ExecuteNonQuery();
+                cn.Close();
+
+            }
+        }
     }
 }
