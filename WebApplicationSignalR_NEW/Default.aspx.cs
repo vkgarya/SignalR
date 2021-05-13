@@ -107,7 +107,8 @@ namespace WebApplicationSignalR_NEW
                 }
             }
             else
-            {
+            { 
+                
                 // HttpContext.Current.Response.Write("SqlDependency not restarted");
             }
 
